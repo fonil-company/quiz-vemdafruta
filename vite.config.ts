@@ -12,4 +12,13 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    server: {
+      // Deployed on EasyPanel, which runs `vite dev` directly (not a production
+      // build) behind its own reverse proxy. Vite rejects requests whose Host
+      // header isn't allow-listed, so the EasyPanel-issued domain (and any
+      // future custom domain on the same panel) needs to be added here.
+      allowedHosts: [".easypanel.host"],
+    },
+  },
 });
