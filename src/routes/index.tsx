@@ -17,15 +17,13 @@ import {
   Timer,
 } from "lucide-react";
 import vemDaFrutaLogo from "@/assets/Logo Vem da fruta.png";
-import exercitoLogo from "@/assets/Exercito logo.webp";
-import funasaLogo from "@/assets/FUNASA logo.jfif";
-import hospitalSaoMarcosLogo from "@/assets/Hospital são marcos logo.jfif";
-import hospitalSaoPauloLogo from "@/assets/Hospital são paulo logo.png";
 import faustinoLogo from "@/assets/Logo faustino.png";
 import ferreiraLogo from "@/assets/Logo ferreira.png";
 import malaguetaLogo from "@/assets/Malagueta logo.jfif";
 import rCarvalhoLogo from "@/assets/R Carvalho logo.jfif";
 import texasLogo from "@/assets/Texas logo.jfif";
+import cincoSentidosLogo from "@/assets/Cinco Sentidos logo.jpg";
+import casaDoChurrascoLogo from "@/assets/Casa do Churrasco logo.jpg";
 import heroFruits from "@/assets/hero-fruits.jpg";
 import produtoManga from "@/assets/produtos/produto-1.jpg";
 import produtoSucoAcerola from "@/assets/produtos/produto-2.jpg";
@@ -109,24 +107,14 @@ const QUESTIONS = [
   },
 ] as const;
 
-const PARTNERS = [
-  { name: "Rede Ferreira", badge: "Top 1 em vendas", color: "var(--brand-green)" },
-  { name: "Rede Carvalho", badge: "Top 1 em vendas", color: "var(--brand-orange)" },
-  { name: "Rede Hospitalar", badge: "Fornecedor Oficial", color: "var(--brand-guava)" },
-  { name: "Maternidade Pública", badge: "Maior do Brasil", color: "var(--brand-pink)" },
-  { name: "Rede Vida", badge: "Parceiro Premium", color: "var(--brand-yellow)" },
-];
-
 const PARTNER_LOGOS = [
-  { name: "Exército", logo: exercitoLogo },
-  { name: "FUNASA", logo: funasaLogo },
-  { name: "Hospital São Marcos", logo: hospitalSaoMarcosLogo },
-  { name: "Hospital São Paulo", logo: hospitalSaoPauloLogo },
   { name: "Faustino", logo: faustinoLogo },
   { name: "Ferreira", logo: ferreiraLogo },
   { name: "Malagueta", logo: malaguetaLogo },
   { name: "R Carvalho", logo: rCarvalhoLogo },
   { name: "Texas", logo: texasLogo },
+  { name: "Cinco Sentidos", logo: cincoSentidosLogo },
+  { name: "Casa do Churrasco", logo: casaDoChurrascoLogo },
 ];
 
 const PRODUCT_SHOWCASE = [
@@ -302,8 +290,6 @@ function ProductShowcase() {
 }
 
 function SocialProof() {
-  const carouselItems = [...PARTNER_LOGOS, ...PARTNER_LOGOS];
-
   return (
     <section className="relative overflow-hidden py-16 md:py-24">
       <div aria-hidden className="section-sparkle section-sparkle-left" />
@@ -315,29 +301,30 @@ function SocialProof() {
               Quem já confia
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-              Parceiros que abastecem milhões
+              Marcas que confiam na Vem da Fruta
             </h2>
           </div>
         </div>
 
-        <div className="partner-carousel relative overflow-hidden py-2">
-          <div className="partner-carousel-track flex w-max gap-5">
-            {carouselItems.map((p, index) => (
-              <motion.div
-                key={`${p.name}-${index}`}
-                whileHover={{ y: -4 }}
-                className="logo-card glass-card flex h-40 w-[220px] shrink-0 flex-col items-center justify-center rounded-3xl p-6 text-center md:w-[260px]"
-              >
-                <img
-                  src={p.logo}
-                  alt={`Logo ${p.name}`}
-                  className="max-h-20 max-w-full object-contain"
-                  loading="lazy"
-                />
-                <span className="mt-4 text-sm font-bold text-foreground">{p.name}</span>
-              </motion.div>
-            ))}
-          </div>
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5 lg:grid-cols-4">
+          {PARTNER_LOGOS.map((p) => (
+            <motion.div
+              key={p.name}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              whileHover={{ y: -4 }}
+              className="logo-card glass-card flex h-36 flex-col items-center justify-center rounded-3xl p-5 text-center"
+            >
+              <img
+                src={p.logo}
+                alt={`Logo ${p.name}`}
+                className="max-h-16 max-w-full object-contain"
+                loading="lazy"
+              />
+              <span className="mt-3 text-sm font-bold text-foreground">{p.name}</span>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
@@ -348,8 +335,8 @@ function Benefits({ onStart }: { onStart: () => void }) {
   const items = [
     {
       icon: Truck,
-      title: "Entrega em até 48h",
-      desc: "Logística ágil para sua região não parar de vender.",
+      title: "Entrega em até 48h em Teresina e região",
+      desc: "Logística ágil para seu comércio não parar de vender.",
       color: "var(--brand-green)",
     },
     {
@@ -787,7 +774,11 @@ function ResultScreen({ answers }: { answers: Answers }) {
         transition={{ delay: 0.5 }}
         className="mt-8 grid w-full max-w-md gap-3 text-left"
       >
-        {["Entrega em até 48h", "Estoque garantido", "Sem cobrança de frete"].map((b) => (
+        {[
+          "Entrega em até 48h (Teresina e região)",
+          "Estoque garantido",
+          "Sem cobrança de frete",
+        ].map((b) => (
           <li
             key={b}
             className="flex items-center gap-3 rounded-2xl bg-white px-5 py-3 shadow-sm ring-1 ring-brand-green/10"
