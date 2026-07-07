@@ -358,6 +358,28 @@
   }
 }
 
+.product-carousel {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.product-carousel-track {
+  animation: product-marquee 55s linear infinite;
+}
+
+.product-carousel:hover .product-carousel-track {
+  animation-play-state: paused;
+}
+
+@keyframes product-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 10px));
+  }
+}
+
 @keyframes shimmer-sweep {
   0% {
     transform: translateX(-130%);
@@ -403,7 +425,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .partner-carousel-track {
+  .partner-carousel-track,
+  .product-carousel-track {
     animation: none;
   }
 
