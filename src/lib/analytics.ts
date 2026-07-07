@@ -20,8 +20,13 @@ export function trackQuizStarted() {
   clarityEvent("quiz_started");
 }
 
+// O nome do evento leva o número da etapa (QuizStep1Answered, QuizStep2Answered...)
+// em vez de um parâmetro, porque o Events Manager do Meta agrupa eventos
+// customizados pelo nome — com um nome único por etapa, cada uma aparece
+// separada na interface, sem precisar configurar Conversões Personalizadas
+// para quebrar por parâmetro.
 export function trackQuizStepAnswered(questionId: string, stepNumber: number) {
-  fbqCustom("QuizStepAnswered", { question_id: questionId, step: stepNumber });
+  fbqCustom(`QuizStep${stepNumber}Answered`, { question_id: questionId, step: stepNumber });
   clarityEvent(`quiz_step_${stepNumber}_${questionId}`);
 }
 
