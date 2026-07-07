@@ -55,9 +55,11 @@ export const sendLeadWebhook = createServerFn({ method: "POST" })
       });
       if (!response.ok) {
         console.error("Lead webhook respondeu com erro", response.status, await response.text());
+        return { ok: false };
       }
     } catch (error) {
       console.error("Falha ao enviar lead para o webhook", error);
+      return { ok: false };
     }
 
     return { ok: true };

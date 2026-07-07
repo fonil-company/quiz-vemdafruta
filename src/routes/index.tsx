@@ -46,7 +46,16 @@ import produtoTamarindo from "@/assets/produtos/produto-16.jpg";
 import produtoCupuacu from "@/assets/produtos/produto-17.jpg";
 import produtoGoiaba from "@/assets/produtos/produto-18.jpg";
 import produtoSucoMaracuja from "@/assets/produtos/produto-19.jpg";
-import { trackLeadEvent } from "@/lib/analytics";
+import {
+  trackQuizStarted,
+  trackQuizStepAnswered,
+  trackCaptureViewed,
+  trackLeadFormSubmitted,
+  trackLeadConfirmed,
+  trackLeadFailed,
+  trackLeadTimeout,
+  trackWhatsAppRedirect,
+} from "@/lib/analytics";
 import { sendLeadWebhook } from "@/lib/lead-webhook";
 import { maskCnpj, isValidCnpj } from "@/lib/cnpj";
 import { maskPhone, isValidPhone } from "@/lib/phone";
@@ -557,7 +566,10 @@ function CaptureForm({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1800);
+    const t = setTimeout(() => {
+      setLoading(false);
+      trackCaptureViewed();
+    }, 1800);
     return () => clearTimeout(t);
   }, []);
 
@@ -725,6 +737,7 @@ function ResultScreen({ answers }: { answers: Answers }) {
 
   useEffect(() => {
     if (secondsLeft <= 0) {
+      trackWhatsAppRedirect();
       window.location.href = href;
       return;
     }
@@ -804,6 +817,7 @@ function ResultScreen({ answers }: { answers: Answers }) {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackWhatsAppRedirect()}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
@@ -859,11 +873,13 @@ function QuizFunnelPage() {
     setStepIndex(0);
     setStage("quiz");
     window.scrollTo({ top: 0, behavior: "smooth" });
+    trackQuizStarted();
   };
 
   const handleAnswer = (value: string) => {
     const q = QUESTIONS[stepIndex];
     setAnswers((a) => ({ ...a, [q.id]: value }));
+    trackQuizStepAnswered(q.id, stepIndex + 1);
     if (stepIndex + 1 < QUESTIONS.length) {
       setStepIndex(stepIndex + 1);
     } else {
@@ -892,7 +908,7 @@ function QuizFunnelPage() {
     city: string;
   }) => {
     setAnswers((a) => ({ ...a, ...data }));
-    trackLeadEvent();
+    trackLeadFormSubmitted();
     setStage("sending");
 
     // Aguardamos o envio (com timeout de segurança) antes de avançar para a tela de
@@ -906,12 +922,23 @@ function QuizFunnelPage() {
         volume: answers.volume,
         frequency: answers.frequency,
       },
-    }).catch((error) => console.error("Falha ao enviar lead", error));
+    })
+      .then((result) => (result.ok ? ("success" as const) : ("failed" as const)))
+      .catch((error) => {
+        console.error("Falha ao enviar lead", error);
+        return "failed" as const;
+      });
 
-    await Promise.race([
+    const outcome = await Promise.race([
       webhookPromise,
-      new Promise((resolve) => setTimeout(resolve, LEAD_WEBHOOK_TIMEOUT_MS)),
+      new Promise<"timeout">((resolve) =>
+        setTimeout(() => resolve("timeout"), LEAD_WEBHOOK_TIMEOUT_MS),
+      ),
     ]);
+
+    if (outcome === "success") trackLeadConfirmed();
+    else if (outcome === "failed") trackLeadFailed();
+    else trackLeadTimeout();
 
     setStage("result");
   };
