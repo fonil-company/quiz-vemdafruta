@@ -15,6 +15,8 @@ import {
   Trophy,
   Star,
   Timer,
+  ChevronDown,
+  MapPin,
 } from "lucide-react";
 import vemDaFrutaLogo from "@/assets/Logo Vem da fruta.png";
 import faustinoLogo from "@/assets/Logo faustino.png";
@@ -24,7 +26,21 @@ import rCarvalhoLogo from "@/assets/R Carvalho logo.jfif";
 import texasLogo from "@/assets/Texas logo.jfif";
 import cincoSentidosLogo from "@/assets/Cinco Sentidos logo.jpg";
 import casaDoChurrascoLogo from "@/assets/Casa do Churrasco logo.jpg";
+import evolucaoPadariaLogo from "@/assets/Evolucao Padaria logo.jpg";
+import padariaNacionalLogo from "@/assets/Padaria Nacional logo.jpg";
+import armazemDomSeverinoLogo from "@/assets/Armazem Dom Severino logo.jpg";
+import modeloLogo from "@/assets/Modelo logo.jpg";
+import saoBrazLogo from "@/assets/Sao Braz logo.jpg";
+import mercadoDosGraosLogo from "@/assets/Mercado dos Graos logo.jpg";
+import aFavoritaPadariaLogo from "@/assets/A Favorita Padaria logo.jpg";
+import redePlanaltoLogo from "@/assets/Rede Planalto logo.jpg";
+import paoDaHoraLogo from "@/assets/Pao da Hora logo.jpg";
+import carvalhoSuperLogo from "@/assets/Carvalho Super logo.jpg";
+import emporioBellaTheLogo from "@/assets/Emporio Bella The logo.jpg";
+import padariaIdealLogo from "@/assets/Padaria Ideal logo.jpg";
+import texanoPicanhariaLogo from "@/assets/Texano Picanharia logo.jpg";
 import heroFruits from "@/assets/hero-fruits.jpg";
+import vemDaFrutaLogoReveal from "@/assets/vem-da-fruta-logo-reveal.mp4";
 import produtoManga from "@/assets/produtos/produto-1.jpg";
 import produtoSucoAcerola from "@/assets/produtos/produto-2.jpg";
 import produtoCaju from "@/assets/produtos/produto-3.jpg";
@@ -115,7 +131,22 @@ const PARTNER_LOGOS = [
   { name: "Texas", logo: texasLogo },
   { name: "Cinco Sentidos", logo: cincoSentidosLogo },
   { name: "Casa do Churrasco", logo: casaDoChurrascoLogo },
+  { name: "Texano Picanharia", logo: texanoPicanhariaLogo },
+  { name: "Evolução Padaria", logo: evolucaoPadariaLogo },
+  { name: "Padaria Nacional", logo: padariaNacionalLogo },
+  { name: "Armazém Dom Severino", logo: armazemDomSeverinoLogo },
+  { name: "Modelo", logo: modeloLogo },
+  { name: "São Braz", logo: saoBrazLogo },
+  { name: "Mercado dos Grãos", logo: mercadoDosGraosLogo },
+  { name: "A Favorita Padaria", logo: aFavoritaPadariaLogo },
+  { name: "Rede Planalto", logo: redePlanaltoLogo },
+  { name: "Pão da Hora", logo: paoDaHoraLogo },
+  { name: "Carvalho Super", logo: carvalhoSuperLogo },
+  { name: "Empório Bella Chá", logo: emporioBellaTheLogo },
+  { name: "Padaria Ideal", logo: padariaIdealLogo },
 ];
+
+const PARTNER_LOGOS_PREVIEW_COUNT = 8;
 
 const PRODUCT_SHOWCASE = [
   { image: produtoManga, label: "Polpa de Manga" },
@@ -166,6 +197,20 @@ function Logo({ className = "" }: { className?: string }) {
   return <img src={vemDaFrutaLogo} alt="Vem da Fruta - Sucos Naturais" className={className} />;
 }
 
+function HeroLogoReveal({ className = "" }: { className?: string }) {
+  return (
+    <video
+      src={vemDaFrutaLogoReveal}
+      aria-label="Vem da Fruta - Sucos Naturais"
+      className={`rounded-2xl border border-brand-green/15 bg-white shadow-sm ${className}`}
+      autoPlay
+      muted
+      playsInline
+      disablePictureInPicture
+    />
+  );
+}
+
 /* ------------------------------ SECTIONS ------------------------------ */
 
 function Hero({ onStart }: { onStart: () => void }) {
@@ -192,7 +237,7 @@ function Hero({ onStart }: { onStart: () => void }) {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
             >
-              <Logo className="h-24 w-auto drop-shadow-sm md:h-32" />
+              <HeroLogoReveal className="h-24 w-auto drop-shadow-sm md:h-32" />
             </motion.div>
             <span className="pill-shine inline-flex items-center gap-2 rounded-full border border-brand-green/25 bg-white/75 px-4 py-2 text-xs font-semibold text-brand-green-dark shadow-sm backdrop-blur md:text-sm">
               <Trophy className="h-4 w-4" />
@@ -290,6 +335,12 @@ function ProductShowcase() {
 }
 
 function SocialProof() {
+  const [expanded, setExpanded] = useState(false);
+  const visibleLogos = expanded
+    ? PARTNER_LOGOS
+    : PARTNER_LOGOS.slice(0, PARTNER_LOGOS_PREVIEW_COUNT);
+  const hiddenCount = PARTNER_LOGOS.length - PARTNER_LOGOS_PREVIEW_COUNT;
+
   return (
     <section className="relative overflow-hidden py-16 md:py-24">
       <div aria-hidden className="section-sparkle section-sparkle-left" />
@@ -307,13 +358,14 @@ function SocialProof() {
         </div>
 
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5 lg:grid-cols-4">
-          {PARTNER_LOGOS.map((p) => (
+          {visibleLogos.map((p, index) => (
             <motion.div
               key={p.name}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               whileHover={{ y: -4 }}
+              transition={{ duration: 0.4, delay: (index % 8) * 0.04 }}
               className="logo-card glass-card flex h-36 flex-col items-center justify-center rounded-3xl p-5 text-center"
             >
               <img
@@ -325,6 +377,24 @@ function SocialProof() {
               <span className="mt-3 text-sm font-bold text-foreground">{p.name}</span>
             </motion.div>
           ))}
+        </div>
+
+        <div className="mt-8 flex flex-col items-center gap-3 text-center">
+          {hiddenCount > 0 && (
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-full border border-brand-green/25 bg-white/75 px-5 py-2.5 text-sm font-semibold text-brand-green-dark shadow-sm backdrop-blur transition hover:bg-white"
+            >
+              {expanded ? "Ver menos" : `+ ${hiddenCount} parceiros`}
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`}
+              />
+            </button>
+          )}
+          <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <MapPin className="h-4 w-4 text-brand-orange" />
+            e +358 parceiros pelo Piauí
+          </p>
         </div>
       </div>
     </section>

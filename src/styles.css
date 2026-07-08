@@ -247,17 +247,6 @@
   animation: shimmer-sweep 1.3s ease-out;
 }
 
-.metric-icon {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  margin-bottom: 10px;
-  color: var(--brand-green-dark);
-  place-items: center;
-  border-radius: 14px;
-  background: color-mix(in oklab, var(--brand-green) 14%, white);
-}
-
 .logo-card {
   transition:
     transform 0.22s ease,
@@ -284,6 +273,17 @@
   content: "";
   border-radius: 999px;
   background: linear-gradient(90deg, var(--brand-green), var(--brand-yellow));
+}
+
+.metric-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 10px;
+  color: var(--brand-green-dark);
+  place-items: center;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--brand-green) 14%, white);
 }
 
 .benefit-card {
