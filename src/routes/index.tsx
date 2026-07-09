@@ -241,17 +241,15 @@ function Hero({ onStart }: { onStart: () => void }) {
             </motion.div>
             <span className="pill-shine inline-flex items-center gap-2 rounded-full border border-brand-green/25 bg-white/75 px-4 py-2 text-xs font-semibold text-brand-green-dark shadow-sm backdrop-blur md:text-sm">
               <Trophy className="h-4 w-4" />
-              Fornecedor de grandes redes e instituições
+              Indústria de Polpas e Sucos Naturais - Teresina, Piauí
             </span>
 
             <h1 className="mt-6 text-4xl leading-[1.05] font-extrabold tracking-tight text-foreground md:text-6xl">
-              Compre polpas de fruta direto da indústria com frete grátis e pedido mínimo de apenas
-              <span className="headline-glow"> R$ 200.</span>
+              Compre polpas e sucos de frutas 100% naturais direto da indústria.
             </h1>
 
             <p className="mt-6 mx-auto max-w-xl text-lg text-muted-foreground md:text-xl">
-              Cadastre seu comércio e descubra as condições especiais para oferecer produtos de alta
-              qualidade com mais margem de lucro.
+              Cadastro rápido, frete grátis e pedido mínimo R$ 200,00.
             </p>
 
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
@@ -259,7 +257,7 @@ function Hero({ onStart }: { onStart: () => void }) {
                 onClick={onStart}
                 className="btn-primary btn-glow group inline-flex items-center gap-2 rounded-full px-7 py-4 text-base font-semibold md:text-lg"
               >
-                Ver se meu comércio se qualifica
+                Comprar Agora
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
               </button>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -462,7 +460,7 @@ function Benefits({ onStart }: { onStart: () => void }) {
             onClick={onStart}
             className="btn-primary group inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-semibold"
           >
-            Ver se meu comércio se qualifica
+            Comprar Agora
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
           </button>
         </div>

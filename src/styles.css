@@ -212,11 +212,6 @@
   animation: shimmer-sweep 4.6s ease-in-out infinite;
 }
 
-.headline-glow {
-  color: var(--brand-green-dark);
-  text-shadow: 0 8px 22px color-mix(in oklab, var(--brand-green) 28%, transparent);
-}
-
 .metric-card {
   display: flex;
   min-height: 112px;
