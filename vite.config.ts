@@ -12,12 +12,19 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // EasyPanel runs the build output as a plain Node process, not Cloudflare Workers,
+  // so we need to override the wrapper's cloudflare-module default preset. Without
+  // this, `.output/server/index.mjs` targets the Workers runtime and doesn't run
+  // under plain `node` — which is why production was falling back to `vite dev`.
+  nitro: {
+    preset: "node-server",
+  },
   vite: {
     server: {
-      // Deployed on EasyPanel, which runs `vite dev` directly (not a production
-      // build) behind its own reverse proxy. Vite rejects requests whose Host
-      // header isn't allow-listed, so the EasyPanel-issued domain (and any
-      // future custom domain on the same panel) needs to be added here.
+      // Local `vite dev` sits behind EasyPanel's reverse proxy when running there,
+      // and Vite rejects requests whose Host header isn't allow-listed. Production
+      // itself runs the built Node server (see nixpacks.toml), which isn't subject
+      // to this check, but we keep the allow-list for local/preview use on EasyPanel.
       allowedHosts: [".easypanel.host", "quizz.vemdafruta.com.br", "www.quizz.vemdafruta.com.br"],
     },
   },
