@@ -12,6 +12,13 @@ export type LeadWebhookInput = {
   pain?: string;
   volume?: string;
   frequency?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  fbclid?: string;
+  gclid?: string;
 };
 
 function buildObservacoes(data: LeadWebhookInput) {
@@ -25,11 +32,23 @@ function buildObservacoes(data: LeadWebhookInput) {
     `Volume de compra mensal: ${data.volume ?? "não informado"}`,
     `Frequência de compra: ${data.frequency ?? "não informado"}`,
   ];
+
+  const origem = [
+    data.utm_source && `utm_source: ${data.utm_source}`,
+    data.utm_medium && `utm_medium: ${data.utm_medium}`,
+    data.utm_campaign && `utm_campaign: ${data.utm_campaign}`,
+    data.utm_term && `utm_term: ${data.utm_term}`,
+    data.utm_content && `utm_content: ${data.utm_content}`,
+    data.fbclid && `fbclid: ${data.fbclid}`,
+    data.gclid && `gclid: ${data.gclid}`,
+  ].filter((linha): linha is string => Boolean(linha));
+
   return [
     "Lead qualificado pelo quiz Vem da Fruta.",
     "",
     "Dados preenchidos:",
     ...linhas.map((linha) => `- ${linha}`),
+    ...(origem.length > 0 ? ["", "Origem do tráfego:", ...origem.map((linha) => `- ${linha}`)] : []),
   ].join("\n");
 }
 
@@ -45,6 +64,13 @@ export const sendLeadWebhook = createServerFn({ method: "POST" })
       pipeline_stage: "Qualificado",
       observacoes: buildObservacoes(data),
       notes: buildObservacoes(data),
+      utm_source: data.utm_source,
+      utm_medium: data.utm_medium,
+      utm_campaign: data.utm_campaign,
+      utm_term: data.utm_term,
+      utm_content: data.utm_content,
+      fbclid: data.fbclid,
+      gclid: data.gclid,
     };
 
     try {

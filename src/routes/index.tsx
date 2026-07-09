@@ -71,6 +71,7 @@ import {
   trackWhatsAppRedirect,
 } from "@/lib/analytics";
 import { sendLeadWebhook } from "@/lib/lead-webhook";
+import { captureUtmParams } from "@/lib/utm";
 import { maskCnpj, isValidCnpj } from "@/lib/cnpj";
 import { maskPhone, isValidPhone } from "@/lib/phone";
 
@@ -925,6 +926,7 @@ function QuizFunnelPage() {
   const [stage, setStage] = useState<Stage>("landing");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
+  const [utmParams] = useState(() => captureUtmParams());
 
   const totalQuizSteps = QUESTIONS.length + 1; // + capture
 
@@ -980,6 +982,7 @@ function QuizFunnelPage() {
         pain: answers.pain,
         volume: answers.volume,
         frequency: answers.frequency,
+        ...utmParams,
       },
     })
       .then((result) => (result.ok ? ("success" as const) : ("failed" as const)))
