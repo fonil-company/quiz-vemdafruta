@@ -923,10 +923,10 @@ function Footer() {
 type Stage = "landing" | "quiz" | "capture" | "sending" | "result";
 
 // Tempo máximo de espera pelo webhook do CRM antes de seguir em frente de qualquer forma.
-// Precisa ser maior que a latência real do endpoint (observada entre 4,7s e 8,2s em testes),
-// senão o usuário é redirecionado ao WhatsApp antes da requisição terminar e o navegador
-// cancela a chamada pendente, perdendo o lead.
-const LEAD_WEBHOOK_TIMEOUT_MS = 15000;
+// Precisa cobrir o pior caso das retries em sendLeadWebhook (3 tentativas de até 6s cada,
+// mais backoff entre elas, ~20s no total), senão o usuário é redirecionado ao WhatsApp
+// antes das tentativas terminarem e o navegador cancela a chamada pendente, perdendo o lead.
+const LEAD_WEBHOOK_TIMEOUT_MS = 23000;
 
 function QuizFunnelPage() {
   const [stage, setStage] = useState<Stage>("landing");
