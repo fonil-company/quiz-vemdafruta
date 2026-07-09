@@ -10,6 +10,11 @@ function fbqCustom(event: string, params?: Record<string, unknown>) {
   window.fbq?.("trackCustom", event, params);
 }
 
+function fbqStandard(event: string, params?: Record<string, unknown>) {
+  if (typeof window === "undefined") return;
+  window.fbq?.("track", event, params);
+}
+
 function clarityEvent(event: string) {
   if (typeof window === "undefined") return;
   window.clarity?.("event", event);
@@ -35,16 +40,16 @@ export function trackCaptureViewed() {
   clarityEvent("quiz_capture_viewed");
 }
 
+// Dispara o evento padrão "Lead" do Pixel aqui (form enviado), não só o
+// QuizLeadConfirmed abaixo, porque esse depende do webhook do Newtracking
+// responder a tempo — se o CRM externo falhar ou demorar, a conversão de
+// Lead não pode se perder junto com ele.
 export function trackLeadFormSubmitted() {
   fbqCustom("QuizFormSubmitted");
+  fbqStandard("Lead");
   clarityEvent("quiz_form_submitted");
 }
 
-// Dispara só quando o webhook confirma que o CRM recebeu o lead. O Newtracking
-// já envia o evento "Lead" para o Meta via Conversions API (server-side) nesse
-// mesmo momento, então de propósito NÃO disparamos o "Lead" padrão do Pixel
-// aqui — isso duplicaria a conversão no Ads Manager, já que as duas chamadas
-// não compartilham um event_id para dedupe.
 export function trackLeadConfirmed() {
   fbqCustom("QuizLeadConfirmed");
   clarityEvent("quiz_lead_confirmed");
