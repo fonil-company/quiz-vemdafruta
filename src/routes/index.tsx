@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { preload } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Truck,
@@ -215,6 +216,11 @@ function HeroLogoReveal({ className = "" }: { className?: string }) {
 /* ------------------------------ SECTIONS ------------------------------ */
 
 function Hero({ onStart }: { onStart: () => void }) {
+  // hero-fruits.jpg is the LCP element, but it's set as a CSS background-image
+  // rather than an <img>, so the browser's preload scanner can't discover it
+  // early on its own — this emits a high-priority <link rel="preload"> instead.
+  preload(heroFruits, { as: "image", fetchPriority: "high" });
+
   return (
     <section className="relative overflow-hidden bg-hero-radial">
       <OrganicBackdrop />
@@ -246,11 +252,11 @@ function Hero({ onStart }: { onStart: () => void }) {
             </span>
 
             <h1 className="mt-6 text-4xl leading-[1.05] font-extrabold tracking-tight text-foreground md:text-6xl">
-              Compre polpas e sucos de frutas 100% naturais direto da indústria.
+              Compre polpas e sucos da fruta 100% naturais direto da indústria.
             </h1>
 
             <p className="mt-6 mx-auto max-w-xl text-lg text-muted-foreground md:text-xl">
-              Cadastro rápido, frete grátis e pedido mínimo R$ 200,00.
+              Cadastro rápido, frete grátis e pedido mínimo de R$ 200,00.
             </p>
 
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center">
