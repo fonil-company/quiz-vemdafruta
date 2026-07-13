@@ -550,7 +550,7 @@ function PartnerTicker() {
   const items = [...PARTNER_LOGOS, ...PARTNER_LOGOS];
 
   return (
-    <div className="w-full border-b border-brand-green/10 bg-white/70 py-2.5 opacity-60">
+    <div className="w-full border-b border-brand-green/10 bg-white/70 py-3">
       <div className="mx-auto flex max-w-3xl items-center gap-3 px-6">
         <span className="hidden shrink-0 items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase sm:flex">
           <ShieldCheck className="h-3.5 w-3.5" />
@@ -563,7 +563,7 @@ function PartnerTicker() {
                 key={`${p.name}-${index}`}
                 src={p.logo}
                 alt={p.name}
-                className="h-6 w-auto shrink-0 object-contain"
+                className="h-9 w-auto shrink-0 object-contain"
                 loading="lazy"
               />
             ))}
