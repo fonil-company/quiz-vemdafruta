@@ -18,6 +18,7 @@ import {
   Timer,
   ChevronDown,
   MapPin,
+  Instagram,
 } from "lucide-react";
 import vemDaFrutaLogo from "@/assets/Logo Vem da fruta.png";
 import faustinoLogo from "@/assets/Logo faustino.png";
@@ -83,7 +84,6 @@ export const Route = createFileRoute("/")({
 /* ------------------------------ CONFIG ------------------------------ */
 
 const WHATSAPP_NUMBER = "5586933003023";
-const REDIRECT_DELAY_SECONDS = 4;
 
 type OptionKey = string;
 type Answers = {
@@ -149,6 +149,27 @@ const PARTNER_LOGOS = [
 ];
 
 const PARTNER_LOGOS_PREVIEW_COUNT = 8;
+
+const INSTAGRAM_REELS = [
+  "https://www.instagram.com/reel/DWZDBJkDill/",
+  "https://www.instagram.com/reel/DPG87aejvA9/",
+  "https://www.instagram.com/reel/DOYdemMjuaL/",
+  "https://www.instagram.com/reel/DKIXUF1xAHq/",
+  "https://www.instagram.com/reel/DJ9UYMiuJ6X/",
+  "https://www.instagram.com/reel/DJo0owpO5Ja/",
+  "https://www.instagram.com/reel/DJwIY3QuyaI/",
+  "https://www.instagram.com/reel/DJZf0uGuLbu/",
+  "https://www.instagram.com/reel/DJXZQQUvyKX/",
+  "https://www.instagram.com/reel/DIjrGUuOPwB/",
+];
+
+declare global {
+  interface Window {
+    instgrm?: {
+      Embeds: { process: () => void };
+    };
+  }
+}
 
 const PRODUCT_SHOWCASE = [
   { image: produtoManga, label: "Polpa de Manga" },
@@ -525,6 +546,34 @@ function ProgressBar({
   );
 }
 
+function PartnerTicker() {
+  const items = [...PARTNER_LOGOS, ...PARTNER_LOGOS];
+
+  return (
+    <div className="w-full border-b border-brand-green/10 bg-white/70 py-2.5 opacity-60">
+      <div className="mx-auto flex max-w-3xl items-center gap-3 px-6">
+        <span className="hidden shrink-0 items-center gap-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase sm:flex">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          Parceiros que já confiam
+        </span>
+        <div className="partner-ticker-mask relative min-w-0 flex-1 overflow-hidden">
+          <div className="partner-ticker-track flex w-max items-center gap-8">
+            {items.map((p, index) => (
+              <img
+                key={`${p.name}-${index}`}
+                src={p.logo}
+                alt={p.name}
+                className="h-6 w-auto shrink-0 object-contain"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function QuestionCard({
   q,
   onAnswer,
@@ -558,7 +607,7 @@ function QuestionCard({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -40 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-2xl flex-col justify-center px-6 py-12"
+      className="mx-auto flex min-h-[calc(100vh-132px)] w-full max-w-2xl flex-col justify-center px-6 py-12"
     >
       <h2 className="text-3xl leading-tight font-bold tracking-tight md:text-4xl">{q.title}</h2>
       <p className="mt-3 text-muted-foreground">
@@ -640,7 +689,7 @@ function CaptureForm({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-md flex-col items-center justify-center px-6 text-center"
+        className="mx-auto flex min-h-[calc(100vh-132px)] w-full max-w-md flex-col items-center justify-center px-6 text-center"
       >
         <div className="relative">
           <div className="absolute inset-0 animate-ping rounded-full bg-brand-green/30" />
@@ -667,7 +716,7 @@ function CaptureForm({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-xl flex-col justify-center px-6 py-12"
+      className="mx-auto flex min-h-[calc(100vh-132px)] w-full max-w-xl flex-col justify-center px-6 py-12"
     >
       <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-green/10 px-4 py-1.5 text-sm font-semibold text-brand-green-dark">
         <Check className="h-4 w-4" /> Perfil aprovado
@@ -785,6 +834,59 @@ function Field({
   );
 }
 
+function InstagramEmbed({ url }: { url: string }) {
+  return (
+    <div className="shrink-0 snap-center overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-brand-green/10">
+      <blockquote
+        className="instagram-media"
+        data-instgrm-permalink={url}
+        data-instgrm-version="14"
+        style={{ margin: 0, width: 328 }}
+      />
+    </div>
+  );
+}
+
+function InstagramShowcase() {
+  useEffect(() => {
+    const processEmbeds = () => window.instgrm?.Embeds.process();
+
+    if (window.instgrm) {
+      processEmbeds();
+      return;
+    }
+
+    const existingScript = document.getElementById(
+      "instagram-embed-script",
+    ) as HTMLScriptElement | null;
+    if (existingScript) {
+      existingScript.addEventListener("load", processEmbeds);
+      return () => existingScript.removeEventListener("load", processEmbeds);
+    }
+
+    const script = document.createElement("script");
+    script.id = "instagram-embed-script";
+    script.src = "https://www.instagram.com/embed.js";
+    script.async = true;
+    script.addEventListener("load", processEmbeds);
+    document.body.appendChild(script);
+  }, []);
+
+  return (
+    <div className="mx-[calc(50%-50vw)] mt-8 w-screen">
+      <p className="mb-4 flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground">
+        <Instagram className="h-4 w-4 text-brand-orange" />
+        Quem já compra segue a gente no Instagram
+      </p>
+      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2">
+        {INSTAGRAM_REELS.map((url) => (
+          <InstagramEmbed key={url} url={url} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ResultScreen({ answers }: { answers: Answers }) {
   const message = useMemo(() => {
     const tipo = answers.business ?? "não informado";
@@ -794,18 +896,6 @@ function ResultScreen({ answers }: { answers: Answers }) {
   }, [answers]);
 
   const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-
-  const [secondsLeft, setSecondsLeft] = useState(REDIRECT_DELAY_SECONDS);
-
-  useEffect(() => {
-    if (secondsLeft <= 0) {
-      trackWhatsAppRedirect();
-      window.location.href = href;
-      return;
-    }
-    const t = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-  }, [secondsLeft, href]);
 
   return (
     <motion.div
@@ -866,10 +956,24 @@ function ResultScreen({ answers }: { answers: Answers }) {
         ))}
       </motion.ul>
 
-      <motion.div
+      <motion.a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => trackWhatsAppRedirect()}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
+        className="btn-primary btn-glow group mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-semibold"
+      >
+        <MessageCircle className="h-5 w-5" />
+        Falar com especialista no WhatsApp
+      </motion.a>
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.65 }}
         className="mt-8 flex items-center gap-3 rounded-2xl border border-brand-orange/30 bg-brand-orange/10 px-5 py-4 text-left"
       >
         <Sparkles className="h-5 w-5 shrink-0 text-brand-orange" />
@@ -879,28 +983,14 @@ function ResultScreen({ answers }: { answers: Answers }) {
         </p>
       </motion.div>
 
-      <motion.a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => trackWhatsAppRedirect()}
+      <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="btn-primary mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-semibold"
+        className="w-full"
       >
-        <MessageCircle className="h-5 w-5" />
-        Falar com especialista
-      </motion.a>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="mt-4 text-sm text-muted-foreground"
-      >
-        Redirecionando para o WhatsApp em {secondsLeft}s...
-      </motion.p>
+        <InstagramShowcase />
+      </motion.div>
     </motion.div>
   );
 }
@@ -1030,7 +1120,10 @@ function QuizFunnelPage() {
           <OrganicBackdrop />
           <div className="relative">
             {stage !== "result" && stage !== "sending" && (
-              <ProgressBar step={currentStep} total={totalQuizSteps} onBack={handleBack} />
+              <>
+                <ProgressBar step={currentStep} total={totalQuizSteps} onBack={handleBack} />
+                <PartnerTicker />
+              </>
             )}
             <AnimatePresence mode="wait">
               {stage === "quiz" && (

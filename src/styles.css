@@ -353,6 +353,24 @@
   }
 }
 
+.partner-ticker-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.partner-ticker-track {
+  animation: partner-marquee 34s linear infinite;
+}
+
+@keyframes partner-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 16px));
+  }
+}
+
 @keyframes shimmer-sweep {
   0% {
     transform: translateX(-130%);
@@ -398,7 +416,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .product-carousel-track {
+  .product-carousel-track,
+  .partner-ticker-track {
     animation: none;
   }
 
