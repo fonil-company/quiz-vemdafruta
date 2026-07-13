@@ -1113,9 +1113,11 @@ function QuizFunnelPage() {
       {stage === "landing" && (
         <>
           <Hero onStart={start} />
-          <ProductShowcase />
           <SocialProof />
+          <ProductShowcase />
+          <InstagramShowcase />
           <Benefits onStart={start} />
+          <InstagramShowcase />
           <Footer />
         </>
       )}
