@@ -1117,7 +1117,6 @@ function QuizFunnelPage() {
           <ProductShowcase />
           <InstagramShowcase />
           <Benefits onStart={start} />
-          <InstagramShowcase />
           <Footer />
         </>
       )}
