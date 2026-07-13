@@ -1000,6 +1000,15 @@ function Footer() {
     <footer className="border-t border-brand-green/10 bg-white/60 py-10">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 md:flex-row">
         <Logo className="h-10 w-auto" />
+        <a
+          href="https://maps.app.goo.gl/9WgtThwFdibQbNNz7"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-brand-green-dark"
+        >
+          <MapPin className="h-4 w-4 shrink-0" />
+          Nossa localização
+        </a>
         <p className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} Vem da Fruta — Sucos Naturais. Todos os direitos reservados.
         </p>
