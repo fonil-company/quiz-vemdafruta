@@ -1068,6 +1068,10 @@ function QuizFunnelPage() {
     trackLeadFormSubmitted();
     setStage("sending");
 
+    // Mesmo event_id enviado ao CRM e usado no fbq do Pixel abaixo, para o Meta
+    // deduplicar o "Lead" do Pixel com o "Lead" que o CRM dispara via Conversions API.
+    const eventId = crypto.randomUUID();
+
     // Aguardamos o envio (com timeout de segurança) antes de avançar para a tela de
     // resultado, que redireciona ao WhatsApp em poucos segundos. Se navegarmos antes
     // do webhook terminar, o navegador cancela a requisição e o lead se perde.
@@ -1079,6 +1083,7 @@ function QuizFunnelPage() {
         volume: answers.volume,
         frequency: answers.frequency,
         ...utmParams,
+        event_id: eventId,
       },
     })
       .then((result) => (result.ok ? ("success" as const) : ("failed" as const)))
@@ -1094,7 +1099,7 @@ function QuizFunnelPage() {
       ),
     ]);
 
-    if (outcome === "success") trackLeadConfirmed();
+    if (outcome === "success") trackLeadConfirmed(eventId);
     else if (outcome === "failed") trackLeadFailed();
     else trackLeadTimeout();
 

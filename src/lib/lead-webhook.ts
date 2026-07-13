@@ -19,6 +19,9 @@ export type LeadWebhookInput = {
   utm_content?: string;
   fbclid?: string;
   gclid?: string;
+  // Mesmo event_id usado no fbq do Pixel, para o CRM disparar o "Lead" via
+  // Conversions API com o event_id que o Meta usa para deduplicar com o Pixel.
+  event_id?: string;
 };
 
 function buildObservacoes(data: LeadWebhookInput) {
@@ -105,6 +108,7 @@ export const sendLeadWebhook = createServerFn({ method: "POST" })
       utm_content: data.utm_content,
       fbclid: data.fbclid,
       gclid: data.gclid,
+      event_id: data.event_id,
     };
 
     for (let attempt = 1; attempt <= WEBHOOK_ATTEMPTS; attempt++) {

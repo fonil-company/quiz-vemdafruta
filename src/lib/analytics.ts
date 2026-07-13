@@ -10,9 +10,16 @@ function fbqCustom(event: string, params?: Record<string, unknown>) {
   window.fbq?.("trackCustom", event, params);
 }
 
-function fbqStandard(event: string, params?: Record<string, unknown>) {
+// eventId, quando informado, vai como eventID (4º argumento do fbq) para o
+// Pixel deduplicar com o evento equivalente disparado server-side via
+// Conversions API pelo CRM.
+function fbqStandard(event: string, params?: Record<string, unknown>, eventId?: string) {
   if (typeof window === "undefined") return;
-  window.fbq?.("track", event, params);
+  if (eventId) {
+    window.fbq?.("track", event, params ?? {}, { eventID: eventId });
+  } else {
+    window.fbq?.("track", event, params);
+  }
 }
 
 function clarityEvent(event: string) {
@@ -40,18 +47,19 @@ export function trackCaptureViewed() {
   clarityEvent("quiz_capture_viewed");
 }
 
-// Dispara o evento padrão "Lead" do Pixel aqui (form enviado), não só o
-// QuizLeadConfirmed abaixo, porque esse depende do webhook do Newtracking
-// responder a tempo — se o CRM externo falhar ou demorar, a conversão de
-// Lead não pode se perder junto com ele.
 export function trackLeadFormSubmitted() {
   fbqCustom("QuizFormSubmitted");
-  fbqStandard("Lead");
   clarityEvent("quiz_form_submitted");
 }
 
-export function trackLeadConfirmed() {
+// O evento padrão "Lead" do Pixel só dispara aqui, quando o webhook do CRM
+// confirma o recebimento, para não reportar ao Meta uma conversão de lead
+// que nunca chegou ao CRM. eventId é o mesmo enviado ao CRM, que dispara o
+// "Lead" equivalente via Conversions API — precisa ser idêntico dos dois
+// lados para a deduplicação (Pixel + CAPI) funcionar no Events Manager.
+export function trackLeadConfirmed(eventId?: string) {
   fbqCustom("QuizLeadConfirmed");
+  fbqStandard("Lead", undefined, eventId);
   clarityEvent("quiz_lead_confirmed");
 }
 
