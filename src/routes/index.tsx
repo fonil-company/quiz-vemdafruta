@@ -248,11 +248,11 @@ function Hero({ onStart }: { onStart: () => void }) {
             </motion.div>
             <span className="pill-shine inline-flex items-center gap-2 rounded-full border border-brand-green/25 bg-white/75 px-4 py-2 text-xs font-semibold text-brand-green-dark shadow-sm backdrop-blur md:text-sm">
               <Trophy className="h-4 w-4" />
-              Indústria de Polpas e Sucos Naturais - Teresina, Piauí
+              Fábrica de Polpas e Sucos Naturais - Teresina, Piauí
             </span>
 
             <h1 className="mt-6 text-4xl leading-[1.05] font-extrabold tracking-tight text-foreground md:text-6xl">
-              Compre polpas e sucos da fruta 100% naturais direto da indústria.
+              Compre polpas e sucos da fruta 100% naturais direto da fábrica.
             </h1>
 
             <p className="mt-6 mx-auto max-w-xl text-lg text-muted-foreground md:text-xl">
